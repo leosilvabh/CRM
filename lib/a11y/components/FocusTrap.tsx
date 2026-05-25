@@ -41,6 +41,17 @@ export const FocusTrap: React.FC<FocusTrapProps> = ({
   returnFocus = true,
   clickOutsideDeactivates = false,
 }) => {
+  // Mantém o valor atual em ref para que as funções abaixo (passadas ao
+  // focus-trap-react) leiam sempre o estado mais recente, sem precisar
+  // reativar o trap. Sem isso, mudanças dinâmicas em `clickOutsideDeactivates`
+  // são ignoradas (a lib só lê o valor no momento da ativação), causando
+  // bloqueio de cliques em diálogos aninhados (ex: ConfirmDialog dentro de
+  // DealDetailModal).
+  const clickOutsideRef = React.useRef(clickOutsideDeactivates);
+  React.useEffect(() => {
+    clickOutsideRef.current = clickOutsideDeactivates;
+  }, [clickOutsideDeactivates]);
+
   const getInitialFocus = (): string | HTMLElement | (() => HTMLElement | null) | false | undefined => {
     if (initialFocus === false) {
       return false;
@@ -64,8 +75,8 @@ export const FocusTrap: React.FC<FocusTrapProps> = ({
           onEscape();
           return false; // Don't deactivate, let parent handle it
         } : true,
-        clickOutsideDeactivates,
-        allowOutsideClick: clickOutsideDeactivates,
+        clickOutsideDeactivates: () => clickOutsideRef.current,
+        allowOutsideClick: () => clickOutsideRef.current,
         // Fallback to container if no focusable elements found
         fallbackFocus: () => {
           const container = document.querySelector('[data-focus-trap-fallback]');
