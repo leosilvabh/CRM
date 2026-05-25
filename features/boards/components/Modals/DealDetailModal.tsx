@@ -1309,7 +1309,13 @@ export const DealDetailModal: React.FC<DealDetailModalProps> = ({ dealId, isOpen
   }
 
   return (
-    <FocusTrap active={isOpen} onEscape={onClose}>
+    <FocusTrap
+      active={isOpen}
+      onEscape={onClose}
+      // O ConfirmDialog usa portal (fora desta árvore). Sem isso, o focus trap bloqueia os cliques
+      // nos botões "Cancelar"/"Excluir" quando o diálogo de confirmação está aberto.
+      clickOutsideDeactivates={Boolean(deleteId)}
+    >
       <div
         // Backdrop + positioning wrapper. Clicking outside the panel should close the modal.
         // No desktop, este modal não deve cobrir a sidebar de navegação.
