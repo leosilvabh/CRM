@@ -296,7 +296,7 @@ export default function SetupPage() {
         </div>
 
         <p className="mt-8 text-center text-xs text-slate-400 dark:text-slate-500">
-          &copy; {new Date().getFullYear()} NossoCRM. Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Évora Serviços Ltda. Todos os direitos reservados.
         </p>
       </div>
     </div>
